@@ -49,11 +49,12 @@ bool Production<SymbolType>::isValidProduction(
     return isValid;
 }
 
+
 //LSystemInterpreter costructor
 template<typename SymbolType>
 LSystemInterpreter<SymbolType>::LSystemInterpreter(const std::vector<SymbolType> &axiom,
                                                    const std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>> &productions,
-                                                   const std::unordered_set<SymbolType> &alphabet) {
+                                                   const std::unordered_set<SymbolType> &alphabet): axiom(axiom), productions(productions), alphabet(alphabet) {
     // Check if all productions are valids
     // We go through all the productions
     for (const Production<SymbolType>& production: productions) {
@@ -86,9 +87,63 @@ LSystemInterpreter<SymbolType>::LSystemInterpreter(const std::vector<SymbolType>
     }
 }
 
+
 template<typename SymbolType>
 std::vector<SymbolType> LSystemInterpreter<SymbolType>::generate(unsigned long iterations) {
-    return std::vector<SymbolType>();
+    // How it works: I have a vector of vectors. I do this because I can then easily loop over this vector of vectors and check a vector against the predecessor.
+    // If this vector has already been changed it will not be equal. This is so that we can do multiple productions without accidently changing a symbol that came out of a production.
+    // After I ran through a whole a production I get out all the data of each vector in the vector of vectors and put it into a vector of single symbols.
+    // This one is only used, so I can get a vector of vectors with only one symbol in each vector again, I copy this data over to the vector of vectors.
+    // I then put each symbol in a vector inside the vector of vectors, so it's usable for the next iteration.
+    // It's a complicated way, but this assures that it works for each SymbolType
+
+
+    // Create a CopyVector which is a vector of vectors and will be used to store the new string
+    std::vector<std::vector<SymbolType>> CopyVector;
+    // Create a SingleSymbolVector
+    std::vector<SymbolType> SingleSymbolVector;
+    // Put the axiomvector into the CopyVector
+    CopyVector.push_back(axiom);
+    // We iterate as many times as needed
+    for (unsigned long i = 0; i < iterations; i++) {
+        // Loop through all the productions
+        for (const Production<SymbolType> &production: productions) {
+            // Loop over the CopyVector
+            for (int j = 0; j < CopyVector.size(); j++) {
+                // Check if the Vector in CopyVector equals the PredecessorVector
+                if (CopyVector[j] == production.Predecessor) {
+                    // If it does we clear Vector of CopyVector, so we can put the new data inside it
+                    CopyVector[j].clear();
+                    // We loop over all the Symbols in the SuccessorVector
+                    for (const SymbolType& SuccessorSymbol: production.Successor) {
+                        // We put the Symbol in the Vector of CopyVector
+                        CopyVector[j].push_back(SuccessorSymbol);
+                    }
+                }
+            }
+        }
+        // Clear the SingleSymbolVector so it's usable
+        SingleSymbolVector.clear();
+        // Loop over all the Vectors in CopyVector
+        for (const std::vector<SymbolType>& CopyVectorVector: CopyVector) {
+            // Loop over all the symbols in the Vector of CopyVector
+            for (const SymbolType& VectorSymbol: CopyVectorVector) {
+                // Put this symbol in the SingleSymbolVector
+                SingleSymbolVector.push_back(VectorSymbol);
+            }
+        }
+        // Clear the CopyVector so it's usable
+        CopyVector.clear();
+        // Loop over all the Symbols in SingleSymbolVector
+        for (const SymbolType& SingleSymbolVectorSymbol: SingleSymbolVector) {
+            // We put the Symbol in a Vector
+            std::vector<SymbolType> SymbolAsVector = {SingleSymbolVectorSymbol};
+            // This Vector we put into the CopyVector
+            CopyVector.push_back(SymbolAsVector);
+        }
+    }
+    // After we ran through all the iterations we return the SingleSymbolVector
+    return SingleSymbolVector;
 }
 
 // Constructor for Production

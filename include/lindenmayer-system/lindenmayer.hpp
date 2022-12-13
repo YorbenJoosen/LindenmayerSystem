@@ -49,6 +49,9 @@ template <typename SymbolType>
 class LSystemInterpreter
 {
 public:
+    std::vector<SymbolType> axiom;
+    std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>> productions;
+    std::unordered_set<SymbolType>alphabet;
     LSystemInterpreter(
             const std::vector<SymbolType>& axiom,
             const std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>>& productions,

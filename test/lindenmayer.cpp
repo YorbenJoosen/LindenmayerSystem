@@ -3,6 +3,7 @@
 //
 
 #include <catch2/catch.hpp>
+#include <iostream>
 #include "lindenmayer-system/lindenmayer.hpp"
 
 TEST_CASE("isValid, string", "[isValid] [string]")
@@ -52,3 +53,54 @@ TEST_CASE("Interpreter, string, alphabet check", "[interpreter] [string] [alphab
     const std::vector<std::string> axiom = {"a"};
     LSystemInterpreter<std::string> (axiom, productions, alphabet);
 }
+
+TEST_CASE("Interpreter, string, single alphabet check", "[interpreter] [string] [single alphabet check]") {
+    const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
+    const Production<std::string> production2 ({"["}, {"["});
+    const Production<std::string> production3 ({"+"}, {"+"});
+    const Production<std::string> production4 ({"]"}, {"]"});
+    const Production<std::string> production5 ({"-"}, {"-"});
+    const std::unordered_set<std::string> alphabet = {"F", "+", "-", "[", "]"};
+    const std::vector<std::string> axiom = {"F"};
+    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2, production3, production4, production5};
+    LSystemInterpreter<std::string>  LSystemConstructed(axiom, productions, alphabet);
+    std::vector<std::string> LSystem = LSystemConstructed.generate(2);
+    std::string TestString;
+    for (std::string& i : LSystem) {
+        TestString.append(i);
+    }
+    CHECK(TestString == "F[+F]-F[+F[+F]-F]-F[+F]-F");
+}
+
+TEST_CASE("Interpreter, string, two alphabet check", "[interpreter] [string] [two alphabet check]") {
+    const Production<std::string> production1({"A"}, {"A", "B"});
+    const Production<std::string> production2 ({"B"}, {"B", "B"});
+    const std::unordered_set<std::string> alphabet = {"A", "B"};
+    const std::vector<std::string> axiom = {"A"};
+    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2};
+    LSystemInterpreter<std::string>  LSystemConstructed(axiom, productions, alphabet);
+    std::vector<std::string> LSystem = LSystemConstructed.generate(3);
+    std::string TestString;
+    for (std::string& i : LSystem) {
+        TestString.append(i);
+    }
+    CHECK(TestString == "ABBBBBBB");
+}
+
+TEST_CASE("Interpreter, string, three alphabet check", "[interpreter] [string] [three alphabet check]") {
+    const Production<std::string> production1({"A"}, {"A", "B", "B"});
+    const Production<std::string> production2 ({"B"}, {"B", "B", "C", "C", "A", "C", "B"});
+    const Production<std::string> production3 ({"C"}, {"A", "B", "C"});
+    const std::unordered_set<std::string> alphabet = {"A", "B", "C"};
+    const std::vector<std::string> axiom = {"A"};
+    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2, production3};
+    LSystemInterpreter<std::string>  LSystemConstructed(axiom, productions, alphabet);
+    std::vector<std::string> LSystem = LSystemConstructed.generate(3);
+    std::string TestString;
+    for (std::string& i : LSystem) {
+        TestString.append(i);
+    }
+    CHECK(TestString == "ABBBBCCACBBBCCACBBBCCACBBBCCACBABCABCABBABCBBCCACBBBCCACBBBCCACBABCABCABBABCBBCCACB");
+    //ABB BBCCACB BBCCACB BBCCACB BBCCACB ABC ABC ABB ABC BBCCACB BBCCACB BBCCACB ABC ABC ABB ABC BBCCACB
+}
+
