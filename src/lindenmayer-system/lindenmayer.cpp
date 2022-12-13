@@ -156,8 +156,11 @@ template class Production<std::string>;
 // Explicit int instantation for Production class
 template class Production<int>;
 
-// Explicit int instantation for LSystemInterpreter class
+// Explicit string instantation for LSystemInterpreter class
 template class LSystemInterpreter<std::string>;
+
+// Explicit int instantation for LSystemInterpreter class
+template class LSystemInterpreter<int>;
 
 
 // == constructor

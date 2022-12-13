@@ -3,9 +3,9 @@
 //
 
 #include <catch2/catch.hpp>
-#include <iostream>
 #include "lindenmayer-system/lindenmayer.hpp"
 
+// Test isValid function
 TEST_CASE("isValid, string", "[isValid] [string]")
 {
     const Production<std::string> production1({"a"}, {"a", "b"});
@@ -28,7 +28,9 @@ TEST_CASE("isValid, int", "[isValid] [int]")
     CHECK(isValid2 == false);
 }
 
-TEST_CASE("Interpreter, string, wrong production", "[interpreter] [string] [wrong production]") {
+
+// Test throws
+/*TEST_CASE("Interpreter, string, wrong production", "[interpreter] [string] [wrong production]") {
     const Production<std::string> production({"a", "w", "q"}, {"a", "b", "c"});
     const std::unordered_set<std::string> alphabet = {"a", "b"};
     const std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production};
@@ -52,8 +54,9 @@ TEST_CASE("Interpreter, string, alphabet check", "[interpreter] [string] [alphab
     const std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2};
     const std::vector<std::string> axiom = {"a"};
     LSystemInterpreter<std::string> (axiom, productions, alphabet);
-}
+}*/
 
+// Test generate function
 TEST_CASE("Interpreter, string, single alphabet check", "[interpreter] [string] [single alphabet check]") {
     const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
     const Production<std::string> production2 ({"["}, {"["});
@@ -101,6 +104,18 @@ TEST_CASE("Interpreter, string, three alphabet check", "[interpreter] [string] [
         TestString.append(i);
     }
     CHECK(TestString == "ABBBBCCACBBBCCACBBBCCACBBBCCACBABCABCABBABCBBCCACBBBCCACBBBCCACBABCABCABBABCBBCCACB");
-    //ABB BBCCACB BBCCACB BBCCACB BBCCACB ABC ABC ABB ABC BBCCACB BBCCACB BBCCACB ABC ABC ABB ABC BBCCACB
 }
+
+TEST_CASE("Interpreter, int, two alphabet check", "[interpreter] [int] [two alphabet check]") {
+    const Production<int> production1({1}, {1, 2});
+    const Production<int> production2 ({2}, {2, 2});
+    const std::unordered_set<int> alphabet = {1, 2};
+    const std::vector<int> axiom = {1};
+    std::unordered_set<Production<int>, custom_hash<int>> productions = {production1, production2};
+    LSystemInterpreter<int>  LSystemConstructed(axiom, productions, alphabet);
+    std::vector<int> LSystem = LSystemConstructed.generate(3);
+    std::vector<int> CheckVector = {1, 2, 2, 2, 2, 2, 2, 2};
+    CHECK(LSystem == CheckVector);
+}
+
 
