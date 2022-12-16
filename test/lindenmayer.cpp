@@ -121,14 +121,20 @@ TEST_CASE("Interpreter, int, two alphabet check", "[interpreter] [int] [two alph
 
 // Test generate function
 TEST_CASE("Stringbuilder for python", "[python]") {
-    const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
+    /*const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
     const Production<std::string> production2 ({"["}, {"["});
     const Production<std::string> production3 ({"+"}, {"+"});
     const Production<std::string> production4 ({"]"}, {"]"});
     const Production<std::string> production5 ({"-"}, {"-"});
     const std::unordered_set<std::string> alphabet = {"F", "+", "-", "[", "]"};
     const std::vector<std::string> axiom = {"F"};
-    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2, production3, production4, production5};
+    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2, production3, production4, production5};*/
+    const Production<std::string> production1({"F"}, {"F", "+", "+", "F", "+", "+", "F", "+", "+", "+", "+", "+", "F", "-", "F", "+", "+", "F"});
+    const Production<std::string> production2 ({"+"}, {"+"});
+    const Production<std::string> production3 ({"-"}, {"-"});
+    const std::unordered_set<std::string> alphabet = {"F", "+", "-"};
+    const std::vector<std::string> axiom = {"F", "+", "+", "F", "+", "+", "F", "+", "+", "F", "+", "+", "F"};
+    std::unordered_set<Production<std::string>, custom_hash<std::string>> productions = {production1, production2, production3};
     LSystemInterpreter<std::string> LSystemConstructed(axiom, productions, alphabet);
     std::vector<std::string> LSystem = LSystemConstructed.generate(4);
     std::string TestString;
