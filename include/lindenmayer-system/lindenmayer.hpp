@@ -11,11 +11,11 @@
 template <typename SymbolType>
 class Production
 {
-private:
-
 public:
+    // Need to declare these here otherwise we can't acces them in the function
     std::vector<SymbolType> Predecessor;
     std::vector<SymbolType> Successor;
+
     // Constructor
     Production(std::vector<SymbolType> Predecessor, std::vector<SymbolType> Successor);
 
@@ -32,6 +32,7 @@ public:
     bool operator!=(const Production &rhs) const;
 };
 
+// Custom hashing for unordered_set because the built-in hashing won't work with SymbolType
 template <typename SymbolType, template<typename> typename ProductionType = Production>
 struct custom_hash {
     std::size_t operator() (const ProductionType<SymbolType>& toBeHashed) const {
@@ -49,14 +50,17 @@ template <typename SymbolType>
 class LSystemInterpreter
 {
 public:
+    // Need to declare these here otherwise we can't acces them in the function
     std::vector<SymbolType> axiom;
     std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>> productions;
     std::unordered_set<SymbolType>alphabet;
+    // Constructor
     LSystemInterpreter(
             const std::vector<SymbolType>& axiom,
             const std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>>& productions,
             const std::unordered_set<SymbolType>& alphabet
     );
+    // Generate function
     std::vector<SymbolType> generate(unsigned long iterations);
 };
 

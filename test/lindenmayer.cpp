@@ -119,7 +119,7 @@ TEST_CASE("Interpreter, int, two alphabet check", "[interpreter] [int] [two alph
     CHECK(LSystem == CheckVector);
 }
 
-// Test generate function
+// Build strings for python
 TEST_CASE("Stringbuilder for python", "[python]") {
     /*const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
     const Production<std::string> production2 ({"["}, {"["});
@@ -143,5 +143,3 @@ TEST_CASE("Stringbuilder for python", "[python]") {
     }
     std::cout << TestString;
 }
-
-

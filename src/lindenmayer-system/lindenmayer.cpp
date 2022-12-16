@@ -55,10 +55,11 @@ template<typename SymbolType>
 LSystemInterpreter<SymbolType>::LSystemInterpreter(const std::vector<SymbolType> &axiom,
                                                    const std::unordered_set<Production<SymbolType>, custom_hash<SymbolType>> &productions,
                                                    const std::unordered_set<SymbolType> &alphabet): axiom(axiom), productions(productions), alphabet(alphabet) {
-    // Check if all productions are valids
+    // Check if all productions are valid
     // We go through all the productions
     for (const Production<SymbolType>& production: productions) {
         bool isValid = production.isValidProduction(production, alphabet);
+        // If production is not valid we throw an exception
         if (not isValid) {
             throw std::logic_error("Production contains symbols not declared in the alphabet, or the predecessor contains more than one symbol!");
         }
@@ -76,7 +77,6 @@ LSystemInterpreter<SymbolType>::LSystemInterpreter(const std::vector<SymbolType>
     // Since unordered_set does not allow duplicates to be inserted we can check if the size is equal to the size of productions
     if (Predecessors.size() != productions.size()) {
         throw std::logic_error("Some productions do not have a unique predecessor");
-
     }
 
     // Check if there is a production for each symbol in the alphabet
@@ -88,6 +88,7 @@ LSystemInterpreter<SymbolType>::LSystemInterpreter(const std::vector<SymbolType>
 }
 
 
+// LSystem function
 template<typename SymbolType>
 std::vector<SymbolType> LSystemInterpreter<SymbolType>::generate(unsigned long iterations) {
     // How it works: I have a vector of vectors. I do this because I can then easily loop over this vector of vectors and check a vector against the predecessor.
@@ -162,7 +163,6 @@ template class LSystemInterpreter<std::string>;
 // Explicit int instantation for LSystemInterpreter class
 template class LSystemInterpreter<int>;
 
-
 // == constructor
 template<typename SymbolType>
 bool Production<SymbolType>::operator==(const Production &rhs) const {
@@ -175,4 +175,3 @@ template<typename SymbolType>
 bool Production<SymbolType>::operator!=(const Production &rhs) const {
     return rhs != *this;
 }
-
