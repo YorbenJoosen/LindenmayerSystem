@@ -36,12 +36,19 @@ public:
 template <typename SymbolType, template<typename> typename ProductionType = Production>
 struct custom_hash {
     std::size_t operator() (const ProductionType<SymbolType>& toBeHashed) const {
+        // hash variabele berekend van de hele productie
         std::size_t hash;
+        // Ingebouwde hash klasse van C++
         std::hash<SymbolType> SymbolTypeHash;
+        // Elke item van de Succesor afgaan
         for (const auto& item : toBeHashed.Successor)
+            // Nemen de hash van het item en XOR'en het met de hashvariabele om zo op het einde 1 hash te krijgen
             hash ^= SymbolTypeHash(item);
+        // Elke item van de Predecessor afgaan
         for (const auto& item : toBeHashed.Predecessor)
+            // Nemen de hash van het item en XOR'en het met de hashvariabele om zo op het einde 1 hash te krijgen
             hash ^= SymbolTypeHash(item);
+        // Returnen de uiteindelijke hash
         return hash;
     }
 };

@@ -122,7 +122,7 @@ TEST_CASE("Interpreter, int, two alphabet check", "[interpreter] [int] [two alph
 // Build strings for python
 TEST_CASE("Stringbuilder for python", "[python]") {
     /*const Production<std::string> production1({"F"}, {"F", "[", "+", "F", "]", "-", "F"});
-    const Production<std::string> production2 ({"["}, {"["});
+1    const Production<std::string> production2 ({"["}, {"["});
     const Production<std::string> production3 ({"+"}, {"+"});
     const Production<std::string> production4 ({"]"}, {"]"});
     const Production<std::string> production5 ({"-"}, {"-"});
